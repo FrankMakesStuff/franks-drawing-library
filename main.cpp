@@ -9,7 +9,7 @@ const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 const int WINDOW_LEFT = 250;
 const int WINDOW_TOP = 100;
-const char *WINDOW_TITLE = "Frank's Demo";
+const char *WINDOW_TITLE = "Frank's SDL2 Demo";
 
 
 /**
