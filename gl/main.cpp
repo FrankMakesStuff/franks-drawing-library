@@ -135,6 +135,7 @@ void handleKeys( unsigned char key, int x, int y ){
     //Toggle quad
     if( key == 'q' ){
         gRenderQuad = !gRenderQuad;
+        printf( "key q has been pressed!\n" );
     }
 }
 
