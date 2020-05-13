@@ -1,7 +1,7 @@
 [Project]
 FileName=gl-test.dev
 Name=gl-test
-Type=0
+Type=1
 Ver=2
 ObjFiles=
 Includes=
@@ -29,7 +29,7 @@ IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
 CompilerSettings=10000000c0000000000000000
-UnitCount=1
+UnitCount=2
 
 [VersionInfo]
 Major=1
@@ -56,6 +56,15 @@ CompileCpp=1
 Folder=
 Compile=1
 Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit2]
+FileName=Makefile.win
+Folder=
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=

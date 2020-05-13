@@ -46,6 +46,7 @@ bool init(){
         SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1 );
 
         //Create window
+        printf("SUCCESS: SDL2 started...\n");
         gWindow = SDL_CreateWindow( "SDL Demo", 
 									SDL_WINDOWPOS_UNDEFINED, 
 									SDL_WINDOWPOS_UNDEFINED, 
@@ -56,12 +57,14 @@ bool init(){
             printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
             success = false;
         } else {
+        	printf("SUCCESS: Window created %d x %d...\n", SCREEN_WIDTH, SCREEN_HEIGHT );
             //Create context
             gContext = SDL_GL_CreateContext( gWindow );
             if( gContext == NULL ){
                 printf( "OpenGL context could not be created! SDL Error: %s\n", SDL_GetError() );
                 success = false;
             } else {
+            	printf( "SUCCESS: OpenGL context created.\n" );
                 //Use Vsync
                 if( SDL_GL_SetSwapInterval( 1 ) < 0 )
                     printf( "Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError() );
@@ -70,7 +73,7 @@ bool init(){
                 if( !initGL() ){
                     printf( "Unable to initialize OpenGL!\n" );
                     success = false;
-                }
+                } printf( "SUCCESS: OpenGL started...\n" );
             }
         }
     }
@@ -81,6 +84,7 @@ bool init(){
 		success = false;	
     }
     
+    printf( "SUCCESS: SDL Image started...\n" );
     return success;
 }
 
@@ -100,7 +104,7 @@ bool initGL(){
     //Check for error
     error = glGetError();
     if( error != GL_NO_ERROR ){
-        printf( "Error initializing OpenGL! %s\n", gluErrorString( error ) );
+        printf( "ERROR: GL error after create projection matrix - %s\n", gluErrorString( error ) );
         success = false;
     }
 
@@ -111,7 +115,7 @@ bool initGL(){
     //Check for error
     error = glGetError();
     if( error != GL_NO_ERROR ){
-        printf( "Error initializing OpenGL! %s\n", gluErrorString( error ) );
+        printf( "ERROR: GL error after create modelview matrix - %s\n", gluErrorString( error ) );
         success = false;
     }
     
@@ -121,7 +125,7 @@ bool initGL(){
     //Check for error
     error = glGetError();
     if( error != GL_NO_ERROR ){
-        printf( "Error initializing OpenGL! %s\n", gluErrorString( error ) );
+        printf( "ERROR: GL error after set glClearColor - %s\n", gluErrorString( error ) );
         success = false;
     }
     
@@ -135,7 +139,7 @@ void handleKeys( unsigned char key, int x, int y ){
     //Toggle quad
     if( key == 'q' ){
         gRenderQuad = !gRenderQuad;
-        printf( "key q has been pressed!\n" );
+        printf( "keypress: q\n" );
     }
 }
 
@@ -182,9 +186,13 @@ void render(GLuint &id){
 
 void close(){
 	SDL_DestroyWindow( gWindow );
+	printf( "CLOSED: GL window...\n" );
 	SDL_GL_DeleteContext( gContext );
+	printf( "CLOSED: GL context...\n" );
 	IMG_Quit();
+	printf( "CLOSED: SDL Image...\n" );
 	SDL_Quit();	
+	printf( "CLOSED: SDL2...\n");
 }
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -207,12 +215,14 @@ int main() {
 	GLuint TextureID;
 	
 	std::string imagePath = SDL_GetBasePath() + (std::string)"crate.png";
-	std::cout << "Attempting to load file: " << imagePath << std::endl;
+	
+	printf( "TEXTURE: Loading %s...\n", imagePath.c_str() );
+	
 	SDL_Surface *tex = IMG_Load(imagePath.c_str());
 	
 	if ( tex == nullptr ){
 		close();
-		std::cout << "Texture load Error: " << SDL_GetError() << std::endl;
+		printf( "ERROR: Could not load texture - %s\n", SDL_GetError() );
 		return 1;
 	} else {
 		glGenTextures( 1, &TextureID );
@@ -244,7 +254,11 @@ int main() {
 		int mode = GL_RGBA;
 		//glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_FLOAT, pixels );									// test/checkerboard pixels
 		glTexImage2D( GL_TEXTURE_2D, 0, mode, TEX_DIMENSION, TEX_DIMENSION, 0, mode, GL_UNSIGNED_BYTE, tex->pixels);	// real image
-		std::cout << glGetError();
+		
+		GLenum err = GL_NO_ERROR;
+		err = glGetError();
+		if( err != GL_NO_ERROR )
+			printf( "ERROR: GL could not create texture - %s\n", gluErrorString( err ) );
 		
 		if( tex ) SDL_FreeSurface( tex );
 	}
@@ -276,7 +290,7 @@ int main() {
         
         //Update screen
         SDL_GL_SwapWindow( gWindow );
-    }
+	} printf( "Exiting loop, cleaning up...\n" );
     
     //Disable text input
     SDL_StopTextInput();
@@ -286,6 +300,8 @@ int main() {
     
     // clean up
     close();
+    
+    printf( "Quitting...\n" );
 	return 0;	
 }
 
