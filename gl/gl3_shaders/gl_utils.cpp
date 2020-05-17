@@ -1,11 +1,15 @@
-// gl_utils.cpp
-
-
 // these preprocessor instructions are needed by SDL2 and glew32 to compile successfully
 #define SDL_MAIN_HANDLED
 #define GLEW_STATIC
 
 #include "gl_utils.h"
+
+const char *FRAG_SHADER_SOURCE = "fshader.txt";
+const char *VERT_SHADER_SOURCE = "vshader.txt";
+
+////////////////////////////////
+/////// GL_UTILS.CPP ///////////
+////////////////////////////////
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 void printProgramLog( GLuint program )
@@ -36,7 +40,7 @@ void printProgramLog( GLuint program )
     }
     else
     {
-        printf( "Name %d is not a program\n", program );
+        printf( "ERROR: Name %d is not a program\n", program );
     }
 }
 
@@ -68,7 +72,7 @@ void printShaderLog( GLuint shader )
     }
     else
     {
-        printf( "Name %d is not a shader\n", shader );
+        printf( "ERROR: Name %d is not a shader\n", shader );
     }
 }
 
@@ -85,7 +89,7 @@ GLuint loadShaderFromFile( std::string path, GLenum shaderType ){
 	
 	if( sourceFile ){
 		// read the source file as one whole string
-		printf( "Reading shader source: %s\n", path.c_str() );
+		printf( "ATTEMPT: Reading shader source: %s\n", path.c_str() );
 		shaderString.assign( std::istreambuf_iterator<char>( sourceFile ), std::istreambuf_iterator<char>() );
 		
 		// create a shader ID
@@ -113,7 +117,7 @@ GLuint loadShaderFromFile( std::string path, GLenum shaderType ){
 		printf( "ERROR: Unable to open file: %s\n", path.c_str() );
 	}
 	
-	printf( "Loaded %s shader.\n", sType.c_str() );
+	printf( "SUCCESS: Loaded %s shader.\n", sType.c_str() );
 	return shaderID;
 }
 
@@ -124,10 +128,10 @@ void setColor( GLint &location, GLfloat r, GLfloat g, GLfloat b ){
 bool loadProgram(GLuint &id){
 		// create a program
 		id = glCreateProgram();
-		printf( "GL program %x created...\n", (unsigned int)id );
+		printf( "SUCCESS: Shader program created...\n", (unsigned int)id );
 		
 		// load vertex shader from file
-		GLuint vertexShader = loadShaderFromFile( "vshader.txt", GL_VERTEX_SHADER );
+		GLuint vertexShader = loadShaderFromFile( VERT_SHADER_SOURCE, GL_VERTEX_SHADER );
 		if( vertexShader == 0 ){
 			glDeleteProgram( id );
 			id = 0;
@@ -138,7 +142,7 @@ bool loadProgram(GLuint &id){
 		glAttachShader( id, vertexShader );
 		
 		// create fragment shader
-		GLuint fragmentShader = loadShaderFromFile( "fshader.txt", GL_FRAGMENT_SHADER );
+		GLuint fragmentShader = loadShaderFromFile( FRAG_SHADER_SOURCE, GL_FRAGMENT_SHADER );
 		if( fragmentShader == 0 ){
 			glDeleteShader( vertexShader );
 			glDeleteProgram( id );
@@ -149,7 +153,7 @@ bool loadProgram(GLuint &id){
 		// attach fragment shader to program
 		glAttachShader( id, fragmentShader );
 		
-		printf( "Attempting to attach GL program...\n" );
+		printf( "ATTEMPT: attach GL program...\n" );
 		// link program
 		glLinkProgram( id );
 		
@@ -158,14 +162,14 @@ bool loadProgram(GLuint &id){
 		glGetProgramiv( id, GL_LINK_STATUS, &programSuccess );
 		if( programSuccess != GL_TRUE )
 	    {
-	        printf( "Error linking program %d!\n", id );
+	        printf( "ERROR: Failed to link program %d!\n", id );
 	        printProgramLog( id );
 	        glDeleteShader( vertexShader );
 	        glDeleteShader( fragmentShader );
 	        glDeleteProgram( id );
 	        id = 0;
 	        return false;
-	    } printf( "Successfully linked shaders to GL program...\n" );
+	    } printf( "SUCCESS: Shaders linked to to GL program...\n" );
 
     //Clean up excess shader references
     glDeleteShader( vertexShader );

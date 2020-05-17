@@ -4,8 +4,9 @@
 CPP      = g++.exe
 CC       = gcc.exe
 WINDRES  = windres.exe
-OBJ      = gl_utils.o main.o
-LINKOBJ  = gl_utils.o main.o
+RES      = gl3_shaders_private.res
+OBJ      = gl_utils.o main.o frank_console.o $(RES)
+LINKOBJ  = gl_utils.o main.o frank_console.o $(RES)
 LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -lglew32 -lopengl32  -lglu32  -lSDL2main  -lSDL2  -lSDL2_image  -static-libgcc
 INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
 CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
@@ -29,3 +30,10 @@ gl_utils.o: gl_utils.cpp
 
 main.o: main.cpp
 	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
+
+frank_console.o: frank_console.cpp
+	$(CPP) -c frank_console.cpp -o frank_console.o $(CXXFLAGS)
+
+gl3_shaders_private.res: gl3_shaders_private.rc 
+	$(WINDRES) -i gl3_shaders_private.rc --input-format=rc -o gl3_shaders_private.res -O coff 
+

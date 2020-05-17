@@ -28,7 +28,7 @@ void update();					// Per frame update
 void render();					// Renders quad to the screen
 void close();					// Frees media and shuts down SDL
 
-SDL_Window* gWindow = NULL;		// The window we'll be rendering to
+SDL_Window *gWindow = NULL;		// The window we'll be rendering to
 SDL_GLContext gContext;			// OpenGL context
 bool gRenderQuad = true;		// Render flag
 
@@ -61,6 +61,7 @@ bool init(){
             success = false;
         } else {
         	printf("SUCCESS: Window created %d x %d...\n", SCREEN_WIDTH, SCREEN_HEIGHT );
+        	
             //Create context
             gContext = SDL_GL_CreateContext( gWindow );
             if( gContext == NULL ){

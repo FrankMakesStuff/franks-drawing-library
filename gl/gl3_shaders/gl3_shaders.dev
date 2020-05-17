@@ -6,7 +6,7 @@ Ver=2
 ObjFiles=
 Includes=
 Libs=
-PrivateResource=
+PrivateResource=gl3_shaders_private.rc
 ResourceIncludes=
 MakeIncludes=
 Compiler=
@@ -29,24 +29,24 @@ IncludeVersionInfo=1
 SupportXPThemes=0
 CompilerSet=0
 CompilerSettings=10000000c0000000000000000
-UnitCount=6
+UnitCount=8
 
 [VersionInfo]
 Major=0
 Minor=0
 Release=0
-Build=1
+Build=17
 LanguageID=1033
 CharsetID=1252
 CompanyName=
-FileVersion=0.0.0.1
+FileVersion=0.0.0.17
 FileDescription=Developed using the Dev-C++ IDE
 InternalName=gl3_shaders
 LegalCopyright=
 LegalTrademarks=
 OriginalFilename=
 ProductName=
-ProductVersion=0.0.0.1
+ProductVersion=0.0.0.17
 AutoIncBuildNr=1
 SyncProduct=1
 
@@ -100,6 +100,26 @@ BuildCmd=
 
 [Unit6]
 FileName=matrix.h
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit7]
+FileName=frank_console.cpp
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit8]
+FileName=frank_console.h
 CompileCpp=1
 Folder=
 Compile=1

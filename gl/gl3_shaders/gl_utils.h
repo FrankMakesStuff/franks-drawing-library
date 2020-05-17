@@ -1,11 +1,3 @@
-/*
-	Name: "gl_utils.h"
-	Copyright: 
-	Author: Frank
-	Date: 15/05/20
-	Description: 		header file for GL stuff
-*/
-
 #ifndef GL_UTILS_H
 #define GL_UTILS_H
 
@@ -22,6 +14,9 @@
 #include <iostream>
 #include <fstream>
 
+///////////////////////////////////
+//////// GL_UTILS HEADER //////////
+///////////////////////////////////
 
 // func prototypes
 bool init();					// Starts up SDL, creates window, and initializes OpenGL

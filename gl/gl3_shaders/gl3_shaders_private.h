@@ -1,0 +1,23 @@
+/* THIS FILE WILL BE OVERWRITTEN BY DEV-C++ */
+/* DO NOT EDIT ! */
+
+#ifndef GL3_SHADERS_PRIVATE_H
+#define GL3_SHADERS_PRIVATE_H
+
+/* VERSION DEFINITIONS */
+#define VER_STRING	"0.0.0.42"
+#define VER_MAJOR	0
+#define VER_MINOR	0
+#define VER_RELEASE	0
+#define VER_BUILD	42
+#define COMPANY_NAME	""
+#define FILE_VERSION	"0.0.0.42"
+#define FILE_DESCRIPTION	"Developed using the Dev-C++ IDE"
+#define INTERNAL_NAME	"gl3_shaders"
+#define LEGAL_COPYRIGHT	""
+#define LEGAL_TRADEMARKS	""
+#define ORIGINAL_FILENAME	""
+#define PRODUCT_NAME	""
+#define PRODUCT_VERSION	"0.0.0.42"
+
+#endif /*GL3_SHADERS_PRIVATE_H*/
