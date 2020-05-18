@@ -1,0 +1,26 @@
+#version 330 core
+out vec4 FragColor;
+
+in vec2 TexCoords;
+
+uniform sampler2D ourTexture;
+  
+void main()
+{
+	const int red_clamp = 8;
+	const int green_clamp = 8;
+	const int blue_clamp = 8;
+	
+	int r, g, b;
+	
+	vec4 colorIn = texture( ourTexture, TexCoords );
+	
+	r = int(colorIn.r * red_clamp);
+	g = int(colorIn.g * green_clamp);
+	b = int(colorIn.b * blue_clamp);
+	
+	vec4 colorOut = vec4( float(r) / red_clamp, float(g) / green_clamp, float(b) / blue_clamp, 1.0 );
+	
+    FragColor = colorOut;
+}
+

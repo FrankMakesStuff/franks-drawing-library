@@ -33,7 +33,8 @@ void close();					// Frees media and shuts down SDL
 void printProgramLog( GLuint program );
 void printShaderLog( GLuint shader );
 GLuint loadShaderFromFile( std::string path, GLenum shaderType );
-bool loadProgram(GLuint &id);
+bool loadProgram(GLuint &id, const char *vertSource, const char *fragSource );
 void setColor( GLint &location, GLfloat r, GLfloat g, GLfloat b );
+GLuint loadTexFromFile( const char *filename, unsigned int width, unsigned int height, bool gammaCorrection, bool filtering );
 
 #endif

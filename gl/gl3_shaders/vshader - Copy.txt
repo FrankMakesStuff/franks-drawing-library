@@ -1,25 +1,19 @@
 #version 330 core
 layout (location = 0) in vec3 aPos;   		// the position variable has attribute position 0
-layout (location = 1) in vec3 aNormal; 		// the normal variable has attribute position 1
+layout (location = 1) in vec3 aColor; 		// the color variable has attribute position 1
 layout (location = 2) in vec2 aTexCoord;	// the texture coords has attribute position 2
 
-out vec3 FragPos;  // output fragment position to the fragment shader
-out vec3 Normal;   // output fragment normal
+out vec3 ourColor; // output a color to the fragment shader
 out vec2 TexCoord; // output texcoords to the fragment shader
-out vec3 LightPos;
 
 // transformation matrices
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-uniform mat3 normal_matrix;
-uniform vec3 lightPos;
 
 void main()
 {
     gl_Position = projection * view * model * vec4(aPos, 1.0f);		// calculate transformation
-	FragPos = vec3(view * model * vec4(aPos, 1.0));					// Deliver fragment position
-    Normal = normal_matrix * aNormal;								// Deliver fragment normal (note: normal_matrix should be calc'd on the cpu)
+    ourColor = aColor;												// distribute vertex color info
     TexCoord = aTexCoord;											// distribute vertex texcoord info
-    LightPos = vec3(view * vec4( lightPos, 1.0 ) );
 } 

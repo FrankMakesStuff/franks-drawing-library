@@ -4,9 +4,6 @@
 
 #include "gl_utils.h"
 
-const char *FRAG_SHADER_SOURCE = "fshader.txt";
-const char *VERT_SHADER_SOURCE = "vshader.txt";
-
 ////////////////////////////////
 /////// GL_UTILS.CPP ///////////
 ////////////////////////////////
@@ -125,13 +122,13 @@ void setColor( GLint &location, GLfloat r, GLfloat g, GLfloat b ){
 	glUniform4f( location, r, g, b, 1.0f );	
 }
 
-bool loadProgram(GLuint &id){
+bool loadProgram(GLuint &id, const char *vertSource, const char *fragSource ){
 		// create a program
 		id = glCreateProgram();
 		printf( "SUCCESS: Shader program created...\n", (unsigned int)id );
 		
 		// load vertex shader from file
-		GLuint vertexShader = loadShaderFromFile( VERT_SHADER_SOURCE, GL_VERTEX_SHADER );
+		GLuint vertexShader = loadShaderFromFile( vertSource, GL_VERTEX_SHADER );
 		if( vertexShader == 0 ){
 			glDeleteProgram( id );
 			id = 0;
@@ -142,7 +139,7 @@ bool loadProgram(GLuint &id){
 		glAttachShader( id, vertexShader );
 		
 		// create fragment shader
-		GLuint fragmentShader = loadShaderFromFile( FRAG_SHADER_SOURCE, GL_FRAGMENT_SHADER );
+		GLuint fragmentShader = loadShaderFromFile( fragSource, GL_FRAGMENT_SHADER );
 		if( fragmentShader == 0 ){
 			glDeleteShader( vertexShader );
 			glDeleteProgram( id );
@@ -153,8 +150,8 @@ bool loadProgram(GLuint &id){
 		// attach fragment shader to program
 		glAttachShader( id, fragmentShader );
 		
-		printf( "ATTEMPT: attach GL program...\n" );
-		// link program
+		// Final link shader program to GL
+		printf( "ATTEMPT: Link GL program...\n" );
 		glLinkProgram( id );
 		
 		// error check
@@ -169,13 +166,81 @@ bool loadProgram(GLuint &id){
 	        glDeleteProgram( id );
 	        id = 0;
 	        return false;
-	    } printf( "SUCCESS: Shaders linked to to GL program...\n" );
+	    } printf( "SUCCESS: Shader program %d created...\n", id );
 
     //Clean up excess shader references
     glDeleteShader( vertexShader );
     glDeleteShader( fragmentShader );
 
     return true;
+}
+
+GLuint loadTexFromFile( const char *filename, unsigned int width, unsigned int height, bool gammaCorrection=false, bool filtering=true ){
+	GLuint tempID;
+	
+	// set our filename from the given parameter, and concat it at the end of the application path on disk
+	std::string imageName = filename;
+	std::string imagePath = SDL_GetBasePath() + imageName;
+	
+	// attempt to load the image file into an SDL surface using the SDL Image helper library
+	printf("ATTEMPT: Loading texture: %s\n", imagePath.c_str() );
+	SDL_Surface *tex = IMG_Load( imagePath.c_str() );
+	
+	// Return a fail if there was a problem
+	if ( tex == nullptr ){
+		printf( "ERROR: Could not load texture - %s\n", SDL_GetError() );
+		return 0;
+	} 
+	else {
+		printf( "SUCCESS: Loaded texture: %s\n", imageName.c_str() );
+		
+		glGenTextures( 1, &tempID );
+		glBindTexture( GL_TEXTURE_2D, tempID );
+		
+		int mode = GL_RGBA;
+		int internalformat;
+		if( gammaCorrection)
+			internalformat = GL_SRGB_ALPHA;
+		else
+			internalformat = GL_RGBA;
+		
+		// DEBUG Texture, just in case of file errors, etc...
+		float pixels[] = {
+			1.0f, 1.0f, 1.0f,	0.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 0.0f,	1.0f, 1.0f, 1.0f
+		};
+		
+		// test/checkerboard pixels
+		//glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_FLOAT, pixels );
+		
+		// Actual texture loaded from surface/file
+		glTexImage2D( GL_TEXTURE_2D, 0, internalformat, width, height, 0, mode, GL_UNSIGNED_BYTE, tex->pixels);
+		
+		// filtering
+		if( filtering ){
+			glGenerateMipmap( GL_TEXTURE_2D );
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+		} else {
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+		}
+		
+		GLenum err = GL_NO_ERROR;
+		err = glGetError();
+		if( err != GL_NO_ERROR ){
+			printf( "ERROR: GL could not create texture - %s\n", gluErrorString( err ) );
+			return 0;
+		}
+		
+		if( tex ) SDL_FreeSurface( tex );
+	}
+
+	return tempID;
 }
 
 
