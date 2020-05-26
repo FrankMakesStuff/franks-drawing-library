@@ -29,24 +29,24 @@ IncludeVersionInfo=1
 SupportXPThemes=0
 CompilerSet=0
 CompilerSettings=10000000c0000000000000000
-UnitCount=11
+UnitCount=14
 
 [VersionInfo]
 Major=0
 Minor=0
 Release=0
-Build=269
+Build=428
 LanguageID=1033
 CharsetID=1252
 CompanyName=
-FileVersion=0.0.0.269
+FileVersion=0.0.0.428
 FileDescription=Developed using the Dev-C++ IDE
 InternalName=gl3_shaders
 LegalCopyright=
 LegalTrademarks=
 OriginalFilename=
 ProductName=
-ProductVersion=0.0.0.269
+ProductVersion=0.0.0.428
 AutoIncBuildNr=1
 SyncProduct=1
 
@@ -127,7 +127,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=vscreen.txt
+FileName=fshadow.txt
 Folder=
 Compile=0
 Link=0
@@ -155,6 +155,24 @@ BuildCmd=
 
 [Unit9]
 FileName=fblur.txt
+Folder=
+Compile=0
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit13]
+FileName=vshadow.txt
+Folder=
+Compile=0
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit14]
+FileName=gshadow.txt
 Folder=
 Compile=0
 Link=0

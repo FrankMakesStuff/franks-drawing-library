@@ -7,9 +7,9 @@ uniform sampler2D ourTexture;
   
 void main()
 {
-	const int red_clamp = 8;
-	const int green_clamp = 8;
-	const int blue_clamp = 8;
+	const int red_clamp = 4;
+	const int green_clamp = 4;
+	const int blue_clamp = 4;
 	
 	int r, g, b;
 	

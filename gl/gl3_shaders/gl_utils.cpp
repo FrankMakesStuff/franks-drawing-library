@@ -9,11 +9,9 @@
 ////////////////////////////////
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-void printProgramLog( GLuint program )
-{
+void printProgramLog( GLuint program ){
     //Make sure name is shader
-    if( glIsProgram( program ) )
-    {
+    if( glIsProgram( program )){
         //Program log length
         int infoLogLength = 0;
         int maxLength = infoLogLength;
@@ -26,8 +24,7 @@ void printProgramLog( GLuint program )
         
         //Get info log
         glGetProgramInfoLog( program, maxLength, &infoLogLength, infoLog );
-        if( infoLogLength > 0 )
-        {
+        if( infoLogLength > 0 ){
             //Print Log
             printf( "%s\n", infoLog );
         }
@@ -35,17 +32,15 @@ void printProgramLog( GLuint program )
         //Deallocate string
         delete[] infoLog;
     }
-    else
-    {
+    else{
         printf( "ERROR: Name %d is not a program\n", program );
     }
 }
 
-void printShaderLog( GLuint shader )
-{
+void printShaderLog( GLuint shader ){
     //Make sure name is shader
-    if( glIsShader( shader ) )
-    {
+    if( glIsShader( shader )){
+    	
         //Shader log length
         int infoLogLength = 0;
         int maxLength = infoLogLength;
@@ -58,8 +53,7 @@ void printShaderLog( GLuint shader )
         
         //Get info log
         glGetShaderInfoLog( shader, maxLength, &infoLogLength, infoLog );
-        if( infoLogLength > 0 )
-        {
+        if( infoLogLength > 0 ){
             //Print Log
             printf( "%s\n", infoLog );
         }
@@ -67,8 +61,7 @@ void printShaderLog( GLuint shader )
         //Deallocate string
         delete[] infoLog;
     }
-    else
-    {
+    else{
         printf( "ERROR: Name %d is not a shader\n", shader );
     }
 }
@@ -81,8 +74,12 @@ GLuint loadShaderFromFile( std::string path, GLenum shaderType ){
 	std::string sType;
 	if( shaderType == GL_VERTEX_SHADER )
 		sType = "vert";
-	else
+	
+	if( shaderType == GL_FRAGMENT_SHADER )
 		sType = "frag";
+		
+	if( shaderType == GL_GEOMETRY_SHADER )
+		sType = "geom";
 	
 	if( sourceFile ){
 		// read the source file as one whole string
@@ -122,7 +119,7 @@ void setColor( GLint &location, GLfloat r, GLfloat g, GLfloat b ){
 	glUniform4f( location, r, g, b, 1.0f );	
 }
 
-bool loadProgram(GLuint &id, const char *vertSource, const char *fragSource ){
+bool loadProgram(GLuint &id, std::string vertSource, std::string fragSource, std::string geoSource ){
 		// create a program
 		id = glCreateProgram();
 		printf( "SUCCESS: Shader program created...\n", (unsigned int)id );
@@ -150,6 +147,21 @@ bool loadProgram(GLuint &id, const char *vertSource, const char *fragSource ){
 		// attach fragment shader to program
 		glAttachShader( id, fragmentShader );
 		
+		// load geometry shader from file
+		GLuint geometryShader;
+		if( !geoSource.empty() ){
+			geometryShader = loadShaderFromFile( geoSource, GL_GEOMETRY_SHADER );
+			if( geometryShader == 0 ){
+				glDeleteShader( fragmentShader );
+				glDeleteProgram( id );
+				id = 0;
+				return false;
+			}
+			
+			// Attach geometry shader to program
+			glAttachShader( id, geometryShader );
+		}
+		
 		// Final link shader program to GL
 		printf( "ATTEMPT: Link GL program...\n" );
 		glLinkProgram( id );
@@ -163,14 +175,18 @@ bool loadProgram(GLuint &id, const char *vertSource, const char *fragSource ){
 	        printProgramLog( id );
 	        glDeleteShader( vertexShader );
 	        glDeleteShader( fragmentShader );
+	        glDeleteShader( geometryShader );
 	        glDeleteProgram( id );
 	        id = 0;
 	        return false;
-	    } printf( "SUCCESS: Shader program %d created...\n", id );
+	    } 
+		
+	printf( "SUCCESS: Shader program %d created...\n", id );
 
     //Clean up excess shader references
     glDeleteShader( vertexShader );
     glDeleteShader( fragmentShader );
+    glDeleteShader( geometryShader );
 
     return true;
 }
@@ -215,7 +231,6 @@ GLuint loadTexFromFile( const char *filename, unsigned int width, unsigned int h
 		
 		// Actual texture loaded from surface/file
 		glTexImage2D( GL_TEXTURE_2D, 0, internalformat, width, height, 0, mode, GL_UNSIGNED_BYTE, tex->pixels);
-		
 		// filtering
 		if( filtering ){
 			glGenerateMipmap( GL_TEXTURE_2D );

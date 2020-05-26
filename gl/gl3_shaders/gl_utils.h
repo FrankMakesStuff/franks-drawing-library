@@ -13,6 +13,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 ///////////////////////////////////
 //////// GL_UTILS HEADER //////////
@@ -25,15 +26,21 @@ void handleKeys(
 	unsigned char key, 
 	int x, 
 	int y );					// Input handler
-void update();					// Per frame update
+void update( float delta );		// Per frame update
+void renderQuad();				// Renders a flat quad to fill the screen
 void render();					// Renders quad to the screen
 void close();					// Frees media and shuts down SDL
+void shaderSendMatrix( unsigned int location, glm::mat4 &matrix );
+void setMat4(unsigned int &ID, const std::string &name, const glm::mat4 &mat);
+void shaderSendMatrix( unsigned int location, glm::mat3 &matrix );
+void setViewport();
+glm::mat3 getNormalMatrix( glm::mat4 inMatrix );
 
 // shader stuff
 void printProgramLog( GLuint program );
 void printShaderLog( GLuint shader );
 GLuint loadShaderFromFile( std::string path, GLenum shaderType );
-bool loadProgram(GLuint &id, const char *vertSource, const char *fragSource );
+bool loadProgram(GLuint &id, std::string vertSource, std::string fragSource, std::string geoSource="" );
 void setColor( GLint &location, GLfloat r, GLfloat g, GLfloat b );
 GLuint loadTexFromFile( const char *filename, unsigned int width, unsigned int height, bool gammaCorrection, bool filtering );
 
